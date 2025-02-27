@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CVE {
+  id                   String  @id
+  sourceIdentifier     String
+  published           DateTime?
+  lastModified        DateTime?
+  vulnStatus          String
+  description         String
+  severity           String
+  vectorString       String
+  accessVector       String
+  accessComplexity   String
+  authentication     String
+  confidentialityImpact String
+  integrityImpact    String
+  availabilityImpact String
+  exploitabilityScore Float?
+  impactScore        Float?
+
+  cpes CPE[]
+}
+
+model CPE {
+  id             String @id @default(uuid())
+  cveId         String
+  criteria      String
+  matchCriteriaId String
+  vulnerable    Boolean
+
+  cve           CVE   @relation(fields: [cveId], references: [id], onDelete: Cascade)
+}
