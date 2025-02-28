@@ -89,7 +89,7 @@ const CVEList = () => {
             onChange={(e) => setLimit(Number(e.target.value))}
             className="border p-1"
           >
-            {[10, 20, 50].map((size) => (
+            {[10, 50, 100].map((size) => (
               <option key={size} value={size}>{size}</option>
             ))}
           </select>

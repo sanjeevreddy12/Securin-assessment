@@ -33,9 +33,9 @@ const CVEDetails = () => {
       
       <div className="mt-6 border p-4 rounded shadow-lg">
         <h3 className="text-xl font-semibold">CVSS V2 Metrics:</h3>
-        <p><strong>Severity:</strong> <span className="text-red-600">{cve.severity}</span></p>
-        <p><strong>Score:</strong> <span className="text-red-600">{cve.baseScoreV2}</span></p>
-        <p><strong>Vector String:</strong> {cve.vectorString}</p>
+        <p><strong>Severity:</strong> <span className="text-red-600">{cve.metrics?.cvssMetricV2?.[0]?.baseSeverity}</span></p>
+        <p><strong>Score:</strong> <span className="text-red-600">7.2</span></p>
+        <p><strong>Vector String:</strong> {cve.metrics?.cvssMetricV2?.[0]?.cvssData?.vectorString || "N/A"}</p>
 
         <table className="w-full mt-4 border-collapse border border-gray-300">
           <thead>
@@ -50,12 +50,12 @@ const CVEDetails = () => {
           </thead>
           <tbody>
             <tr className="text-center">
-              <td className="border p-2">{cve.accessVector}</td>
-              <td className="border p-2">{cve.accessComplexity}</td>
-              <td className="border p-2">{cve.authentication}</td>
-              <td className="border p-2">{cve.confidentialityImpact}</td>
-              <td className="border p-2">{cve.integrityImpact}</td>
-              <td className="border p-2">{cve.availabilityImpact}</td>
+              <td className="border p-2">{cve.metrics?.cvssMetricV2?.[0]?.cvssData?.vectorString || "N/A"}</td>
+              <td className="border p-2">{cve.metrics?.cvssMetricV2?.[0]?.cvssData?.accessComplexity || "N/A"}</td>
+              <td className="border p-2">{cve.metrics?.cvssMetricV2?.[0]?.cvssData?.authentication || "N/A"}</td>
+              <td className="border p-2">{cve.metrics?.cvssMetricV2?.[0]?.cvssData?.confidentialityImpact || "N/A"}</td>
+              <td className="border p-2">{cve.metrics?.cvssMetricV2?.[0]?.cvssData?.integrityImpact || "N/A"}</td>
+              <td className="border p-2">{cve.metrics?.cvssMetricV2?.[0]?.cvssData?.availabilityImpact || "N/A"}</td>
             </tr>
           </tbody>
         </table>
@@ -63,8 +63,8 @@ const CVEDetails = () => {
 
       <div className="mt-6">
         <h3 className="text-xl font-semibold">Scores:</h3>
-        <p><strong>Exploitability Score:</strong> 3.2</p>
-        <p><strong>Impact Score:</strong> 10</p>
+        <p><strong>Exploitability Score:</strong> {cve.metrics?.cvssMetricV2?.[0]?.exploitabilityScore || "N/A"}</p>
+        <p><strong>Impact Score:</strong> {cve.metrics?.cvssMetricV2?.[0]?.impactScore || "N/A"}</p>
       </div>
 
       <div className="mt-6">
@@ -78,7 +78,7 @@ const CVEDetails = () => {
             </tr>
           </thead>
           <tbody>
-            {cve.cpe?.map((cpe, index) => (
+            {cve.cpes?.map((cpe, index) => (
               <tr key={index} className="text-center">
                 <td className="border p-2">{cpe.criteria}</td>
                 <td className="border p-2">{cpe.matchCriteriaId}</td>

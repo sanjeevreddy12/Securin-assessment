@@ -23,19 +23,18 @@ export const fetchAndStoreCVE = async () => {
       for (const cveData of cves) {
         const cve = cveData.cve;
 
-        // Extract CVSS Metrics (Prefer CVSS v3.1 > v3.0 > v2)
+      
         const cvss =
-          cve.metrics?.cvssMetricV31?.[0]?.cvssData ||
-          cve.metrics?.cvssMetricV3?.[0]?.cvssData ||
-          cve.metrics?.cvssMetricV2?.[0]?.cvssData || {};
+         
+          cve.metrics?.cvssMetricV2?.cvssData?.cvssData || {};
 
-        // Ensure scores are properly retrieved
+        
         const exploitabilityScore =
           cvss.exploitabilityScore !== undefined ? cvss.exploitabilityScore : null;
         const impactScore =
           cvss.impactScore !== undefined ? cvss.impactScore : null;
 
-        // Extract CPEs
+        
         const cpes = [];
         if (cve.configurations?.nodes) {
           for (const node of cve.configurations.nodes) {
@@ -51,7 +50,6 @@ export const fetchAndStoreCVE = async () => {
           }
         }
 
-        // Store CVE and CPEs in database
         await prisma.cVE.upsert({
           where: { id: cve.id },
           update: {
@@ -68,8 +66,8 @@ export const fetchAndStoreCVE = async () => {
             confidentialityImpact: cvss.confidentialityImpact || "",
             integrityImpact: cvss.integrityImpact || "",
             availabilityImpact: cvss.availabilityImpact || "",
-            exploitabilityScore,
-            impactScore,
+           
+            metrics: cve.metrics || {},  // Added metrics field
           },
           create: {
             id: cve.id,
@@ -86,11 +84,11 @@ export const fetchAndStoreCVE = async () => {
             confidentialityImpact: cvss.confidentialityImpact || "",
             integrityImpact: cvss.integrityImpact || "",
             availabilityImpact: cvss.availabilityImpact || "",
-            exploitabilityScore,
-            impactScore,
+           
+            metrics: cve.metrics || {},  // Added metrics field
             cpes: {
               create: cpes.map((cpe) => ({
-                cveId: cve.id, // Ensure foreign key is included
+                cveId: cve.id,
                 criteria: cpe.criteria,
                 matchCriteriaId: cpe.matchCriteriaId,
                 vulnerable: cpe.vulnerable,
@@ -98,6 +96,7 @@ export const fetchAndStoreCVE = async () => {
             },
           },
         });
+        
         
       }
 

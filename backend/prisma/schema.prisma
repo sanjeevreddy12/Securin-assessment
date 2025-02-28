@@ -28,8 +28,8 @@ model CVE {
   confidentialityImpact String
   integrityImpact    String
   availabilityImpact String
-  exploitabilityScore Float?
-  impactScore        Float?
+
+  metrics            Json
 
   cpes CPE[]
 }
